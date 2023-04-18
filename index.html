@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Art Night Labels</title>
+<meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;1,700&display=swap');
+    body{ margin: 0; font-family:Arial, sans-serif;}
+    #bar{ background-color: #EEEEEE; padding: 20PX; height: auto; transition: all 1s ease;}
+    .label{ width: 300px; border: 1px dashed #AAA; padding: 20px; font-family: 'Montserrat', sans-serif; float: left; display: inline-block; position: relative;page-break-inside: avoid;}
+    .label span{ display: block; padding-bottom: 5px; color: #444;}
+
+    .height0{ height: 0px !important; overflow: hidden !important; padding: 0 !important;}
+
+    .artist{ font-size: 18px; font-weight: 700; text-transform: capitalize;}
+    .country{ font-size: 14px; font-weight: 400; text-transform: capitalize;}
+    .title{ font-size: 14px; font-weight: 700; font-style: italic;}
+    .medium{ font-size: 14px; font-weight: 400; padding-bottom: 10px !important;}
+    .quote{ font-size: 10px; font-weight: 400; padding-right: 55px;}
+
+    th, td{ text-align: left; padding: 10px; font-family: courier, monospace; border: 1px solid #AAA; font-size: 12px;}
+
+    img{ display: inline-block; position: absolute; bottom: 20px; right: 20px; width: 35px; height: auto;}
+
+    @media print {
+        .hideprint { display: none; }
+    }
+
+    </style>
+</head>
+
+<body>
+<div class="hideprint" id="bar">
+
+    <h1>gallery label generator</h1>
+    <h2>Create CSV</h2>
+    <p>Create CSV file in this layout:</p>
+    <table border="0">
+        <tr>
+            <th>NAME*
+            </tH>
+            <th>COUNTRY*
+            </th>
+            <th>TITLE*
+            </th>
+            <th>MEDIUM*
+            </th>
+            <th>QUOTE
+            </th>
+        </tr>
+        <tr>
+            <td>Joe Bloggs
+            </td>
+            <td>UK
+            </td>
+            <td>A Photo of a Penguin
+            </td>
+            <td>Linocut
+            </td>
+            <td>This is an optional field!
+            </td>
+        </tr>
+    </table>
+
+    <h2>Export CSV</h2>
+    <p>Because there are likely to be commas in the text fields, you'll need to change the separator to pipe. Here's how to do that.</p>
+    <ol style="font-size:12px;">
+        <li>In Microsoft Windows, click the Start button, and then click Control Panel.</li>
+        <li>Open the dialog box for changing Regional and Language settings.</li>
+        <li>In the dialog box, look for the List separator setting. (Location may vary based on Windows version. You may need to open Additional settings... on the Format tab to find it.)</li>
+        <li>Enter the desired list separator.</li>
+        <li>Click Apply and then click OK. (Or Click OK, then click Apply and then click OK.)</li>
+    </ol>
+
+    <h2>Import CSV</h2>
+    <p>Select local CSV File:</p>
+
+    <input id="csv" type="file" class="hideprint">
+
+    <p>Then print this page and go find a pair of scissors.</p>
+
+    <hr class="hideprint">
+</div>
+ 
+
+
+    <script>
+
+    
+
+    var fileInput = document.getElementById("csv"),
+
+    readFile = function () {
+
+        var reader = new FileReader();
+
+        reader.onload = function () {
+
+            var entrants = reader.result.split('\n');
+            entrants.shift(); 
+            var len = entrants.length;
+            //console.log(entrants);
+
+
+            
+
+            function drawLabels(item, index){
+
+                var entrantArray = item.split('|');
+                entrantArray[0].replace('"""', '"');
+                entrantArray[1].replace('"""', '"');
+                entrantArray[2].replace('"""', '"');
+                entrantArray[3].replace('"""', '"');
+                entrantArray[4].replace('"""', '"');
+                $( "body" ).append( "<div class='label' id='box-" + index + "'></div>" );
+                $( "#box-" + index ).append( "<span class='artist'>" + entrantArray[0] + "</span>" );
+                $( "#box-" + index ).append( "<span class='country'>" + entrantArray[1] + "</span>" );
+                $( "#box-" + index ).append( "<span class='title'>" + entrantArray[2] + "</span>" );
+                $( "#box-" + index ).append( "<span class='medium'>" + entrantArray[3] + "</span>" );
+                $( "#box-" + index ).append( "<span class='quote'>" + entrantArray[4] + "</span>" );
+                $( "#box-" + index ).append( "<img src='logo.png'>" );
+
+            }
+
+            entrants.forEach(drawLabels);
+
+        };
+        // start reading the file. When it is done, calls the onload event defined above.
+        reader.readAsBinaryString(fileInput.files[0]);
+        document.getElementById("bar").classList.add("height0");
+    };
+
+    fileInput.addEventListener('change', readFile);
+
+    </script>
+
+    </body>
+</html>
